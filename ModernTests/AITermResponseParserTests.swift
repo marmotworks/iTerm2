@@ -836,7 +836,7 @@ final class AITermResponseParserTests: XCTestCase {
     // MARK: - CompletionsMessage: LLM.Message Initialization
 
     func testCompletionsMessageInitFromLLMMessageWithText() {
-        let llmMsg = LLM.Message(role: .assistant, content: "Hello", name: nil, function_call: nil)
+        let llmMsg = LLM.Message(responseID: nil, role: .assistant, body: .text("Hello"))
         let compMsg = CompletionsMessage(llmMsg)
 
         XCTAssertNotNil(compMsg)
@@ -846,7 +846,7 @@ final class AITermResponseParserTests: XCTestCase {
 
     func testCompletionsMessageInitFromLLMMessageWithFunctionCall() {
         let funcCall = LLM.FunctionCall(name: "my_func", arguments: "{\"x\": 1}", id: "call_1")
-        let llmMsg = LLM.Message(role: .assistant, function_call: funcCall)
+        let llmMsg = LLM.Message(responseID: nil, role: .assistant, body: .functionCall(funcCall, id: nil))
         let compMsg = CompletionsMessage(llmMsg)
 
         XCTAssertNotNil(compMsg)
@@ -855,7 +855,7 @@ final class AITermResponseParserTests: XCTestCase {
     }
 
     func testCompletionsMessageInitFromLLMMessageWithFunctionOutput() {
-        let llmMsg = LLM.Message(role: .assistant, content: "result", name: "my_func", function_call: nil)
+        let llmMsg = LLM.Message(responseID: nil, role: .assistant, body: .functionOutput(name: "my_func", output: "result", id: nil))
         let compMsg = CompletionsMessage(llmMsg)
 
         XCTAssertNotNil(compMsg)
@@ -864,7 +864,7 @@ final class AITermResponseParserTests: XCTestCase {
     }
 
     func testCompletionsMessageInitFromLLMMessageUninitialized() {
-        let llmMsg = LLM.Message(role: .assistant, body: .uninitialized)
+        let llmMsg = LLM.Message(responseID: nil, role: .assistant, body: .uninitialized)
         let compMsg = CompletionsMessage(llmMsg)
 
         XCTAssertNil(compMsg)
@@ -1226,7 +1226,7 @@ final class AITermResponseParserTests: XCTestCase {
         switch messages[0].body {
         case .functionCall(let call, _):
             // The parser accumulates the name from chunks
-            XCTAssertTrue(call.name.contains("get"))
+            XCTAssertTrue(call.name?.contains("get") ?? false)
         default:
             XCTFail("Expected .functionCall body, got \(messages[0].body)")
         }
@@ -1332,12 +1332,12 @@ final class AITermResponseParserTests: XCTestCase {
 
     func testCompletionsMessageDecodesToolMessage() {
         let json = """
-        {"role": "tool", "content": "result here", "tool_call_id": "call_123"}
+        {"role": "function", "content": "result here", "name": "my_func"}
         """
         let data = json.data(using: .utf8)!
         let message = try! JSONDecoder().decode(CompletionsMessage.self, from: data)
 
-        XCTAssertEqual(message.role, .tool)
+        XCTAssertEqual(message.role, .function)
         XCTAssertEqual(message.coercedContentString, "result here")
     }
 
