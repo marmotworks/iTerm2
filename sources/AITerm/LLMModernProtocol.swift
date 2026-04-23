@@ -13,6 +13,19 @@ struct CompletionsMessage: Codable, Equatable {
     var functionName: String?  // in the response only
     var function_call: LLM.FunctionCall?
 
+    // Modern OpenAI format: tool_calls array
+    struct ToolCall: Codable, Equatable {
+        var type: String?
+        var function: FunctionArg
+        var id: String?
+
+        struct FunctionArg: Codable, Equatable {
+            var name: String?
+            var arguments: String?
+        }
+    }
+    var tool_calls: [ToolCall]?
+
     init(role: LLM.Role? = .user,
          content: Content? = nil,
          name: String? = nil,
@@ -28,6 +41,7 @@ struct CompletionsMessage: Codable, Equatable {
         case functionName = "name"
         case content
         case function_call
+        case tool_calls
     }
 
     func encode(to encoder: Encoder) throws {
@@ -44,6 +58,30 @@ struct CompletionsMessage: Codable, Equatable {
         if let function_call {
             try container.encode(function_call, forKey: .function_call)
         }
+
+        if let tool_calls {
+            try container.encode(tool_calls, forKey: .tool_calls)
+        }
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.role = try container.decodeIfPresent(LLM.Role.self, forKey: .role)
+        self.content = try container.decodeIfPresent(Content.self, forKey: .content)
+        self.functionName = try container.decodeIfPresent(String.self, forKey: .functionName)
+
+        // Check modern tool_calls format first, then fall back to legacy function_call
+        if let tools = try container.decodeIfPresent([ToolCall].self, forKey: .tool_calls),
+           let firstTool = tools.first {
+            self.function_call = LLM.FunctionCall(
+                name: firstTool.function.name,
+                arguments: firstTool.function.arguments,
+                id: firstTool.id)
+        } else {
+            self.function_call = try container.decodeIfPresent(LLM.FunctionCall.self, forKey: .function_call)
+        }
+
+        self.tool_calls = try container.decodeIfPresent([ToolCall].self, forKey: .tool_calls)
     }
 
     var approximateTokenCount: Int {
@@ -240,12 +278,13 @@ struct LLMModernStreamingResponseParser: LLMStreamingResponseParser {
 
         var choiceMessages: [LLM.Message] {
             return choices.compactMap { choice -> LLM.Message? in
-                if choice.finish_reason == "function_call" &&
+                let isFinalToolCallChunk = (choice.finish_reason == "function_call" || choice.finish_reason == "tool_calls") &&
                     choice.delta.role == nil &&
                     choice.delta.content == nil &&
                     choice.delta.functionName == nil &&
-                    choice.delta.function_call == nil {
-                    // Sent at the end of a function call
+                    choice.delta.function_call == nil &&
+                    (choice.delta.tool_calls == nil || choice.delta.tool_calls!.isEmpty)
+                if isFinalToolCallChunk {
                     return nil
                 }
                 return LLM.Message(role: .assistant,

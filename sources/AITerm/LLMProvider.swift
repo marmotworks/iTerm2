@@ -122,7 +122,11 @@ struct LLMProvider {
 
     var functionsSupported: Bool {
         // #llama-streaming-functions
-        if model.api == .llama && model.features.contains(.streaming) {
+        // Ollama's native /api/chat endpoint requires stream=false for function calling.
+        // But llama-server's /v1/chat/completions (OpenAI-compatible) supports both.
+        // Detect which API we're actually using by checking the URL path.
+        let isOllamaNativeAPI = model.url.contains("/api/chat") || model.url.contains("/api/generate")
+        if model.api == .llama && isOllamaNativeAPI && model.features.contains(.streaming) {
             return false
         }
         return model.features.contains(.functionCalling)

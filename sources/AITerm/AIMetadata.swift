@@ -539,15 +539,10 @@ class AIMetadata: NSObject {
         // MARK: - Local Models (via Ollama)
 
         // Llama models
-        // Llama supports function calling only without streaming. I dont want
-        // to expose a "streamingFunctionCalling" feature and add that to the
-        // UI. Some day this restriction may go away. For now, we'll have to
-        // silently offer no tools whwn streaming is on :(
-        // Per https://ollama.readthedocs.io/en/api/#generate-a-chat-completion:
-        //   "tools: tools for the model to use if supported. Requires stream to be set
-        //    to false"
-        // To find places where you need to make changes to adjust this logic search for
-        // #llama-streaming-functions
+        // Note: Ollama's native /api/chat API requires stream=false for function calling.
+        // But llama-server's /v1/chat/completions (OpenAI-compatible) supports both.
+        // The #llama-streaming-functions check in LLMProvider detects which API is in use.
+        // Users of llama-server should point their URL at /v1/chat/completions.
         AIMetadata.llama_4_latest,
         AIMetadata.llama_3_3_latest,
     ]
