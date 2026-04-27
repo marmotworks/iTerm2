@@ -6,7 +6,9 @@
 - In Swift, use it_fatalError and it_assert instead of fatalError and assert, which do not create useful crash logs. In ObjC, assert is ok although ITAssertWithMessage is preferable. Asserts are enabled in release builds.
 - Don't write more than one line of inline javascript, html, or css. Instead create a new file and load it using iTermBrowserTemplateLoader.swift
 - Don't create dependency cycles. Use delegates or closures instead.
-- To run unit tests in ModernTests, use tools/run_tests.expect. It takes an argument naming the test or tests, such as `tools/run_tests.expect ModernTests/iTermScriptFunctionCallTest/testSignature`
+- To run all unit tests, use `make test` (runs ModernTests suite, ~1924 tests). To run specific tests, use `tools/run_tests.expect <test-path>`, such as `tools/run_tests.expect ModernTests/iTermScriptFunctionCallTest/testSignature`. The test path is `<scheme>/<test-class>/<test-method>`. You can pass multiple test paths.
+- **False positive:** xcodebuild may report `** TEST FAILED **` even when all tests pass (0 failures). This is caused by WebKit entitlement warnings in the test host process. Always check the actual summary line: `Executed N tests, with 0 failures (0 unexpected)` to determine real test results.
+- After an Xcode update, prebuilt Swift frameworks (SwiftyMarkdown, Highlightr, etc.) will fail with "unable to resolve Swift module dependency". Fix by running `make bindeps` to rebuild them, then `xcodebuild -version > last-xcode-version` to update the version tracker.
 - When renaming a file tracked by git (and almost all of them are) use `git mv` instead of `mv`
 - To make a debug build run `tools/build.sh` (or `tools/build.sh Development`). This saves logs to `tmp/build.log` and shows only errors/warnings on failure.
 - Little scripts or text files that are used for manual testing of features go in tests/

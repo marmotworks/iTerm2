@@ -30,7 +30,7 @@
 ```
 iTerm2/
 ├── sources/               # Main application code
-├── tests/iTerm2XCTests/   # Unit tests
+├── ModernTests/           # Unit tests (~1924)
 ├── proto/api.proto        # Protocol Buffer API
 ├── tools/                 # Build scripts
 ├── submodules/            # Git submodules
@@ -44,7 +44,7 @@ iTerm2/
 
 ### Modifying Terminal Emulation
 - Escape sequences flow: `VT100Parser`/`VT100Terminal` → `VT100ScreenMutableState`/`VT100Screen` → `VT100Grid`
-- Look at `VT100ScreenTest.m` for examples
+- Look at `ModernTests/VT100ScreenTests.swift` for examples
 - Test changes thoroughly
 
 ### Extending APIs
@@ -95,4 +95,5 @@ assert(value != nil)
 - Session logic → `PTYSession.{h,m}`
 - Terminal emulation → `VT100Parser`, `VT100Terminal`, `VT100ScreenMutableState`
 - UI rendering → `PTYTextView.{h,m}`
-- Tests → `tests/iTerm2XCTests/`
+- Unit tests → `ModernTests/` (main suite, ~1924 tests)
+- Performance tests → `PerformanceTests/`
