@@ -5416,6 +5416,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				A6E180E723D2E2B2003C4EB1 /* CoreParse.framework in CopyFiles */,
+				A68BE9512DE51591002DD513 /* librailroad_dsl.dylib in CopyFiles */,
 				A6184F8E1BAB3F090088EF3C /* ColorPicker.framework in CopyFiles */,
 				A6661312225CFF7A00840E89 /* BetterFontPicker.framework in CopyFiles */,
 				A605D4B419CF796F00D40343 /* NMSSH.framework in CopyFiles */,
@@ -9382,6 +9383,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A69FEECD2E123B8700AFF7A8 /* iTermSwiftPackages.framework in Frameworks */,
+				A68BE9502DE5142A002DD513 /* librailroad_dsl.dylib in Frameworks */,
 				A667196A1DCE396A000CE608 /* libiTerm2SharedARC.a in Frameworks */,
 				A6661311225CFF7A00840E89 /* BetterFontPicker.framework in Frameworks */,
 				A690F7041B424EF8009F76D8 /* OpenDirectory.framework in Frameworks */,
@@ -9422,6 +9424,9 @@
 				1DD39B7B180B8842004E56D5 /* libicucore.dylib in Frameworks */,
 				1DD39AD7180B8118004E56D5 /* Cocoa.framework in Frameworks */,
 				A6C763D31B45C5B700E3C992 /* libiTerm2Shared.a in Frameworks */,
+				A68BE9502DE5142A002DD513 /* librailroad_dsl.dylib in Frameworks */,
+				A69FEECD2E123B8700AFF7A8 /* iTermSwiftPackages.framework in Frameworks */,
+				A6C7C96D2E172F3E00AA7668 /* WebExtensionsFramework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -21605,6 +21610,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				LINK_WITH_STANDARD_LIBRARIES = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
@@ -21679,6 +21685,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -21750,6 +21757,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -21837,6 +21845,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -21919,6 +21928,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -22000,6 +22010,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -22216,6 +22227,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -22293,6 +22305,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -22367,6 +22380,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -22441,6 +22455,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -22890,6 +22905,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -22998,6 +23014,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ThirdParty/libsixel/lib",
+					"$(PROJECT_DIR)/ThirdParty/librailroad_dsl/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;

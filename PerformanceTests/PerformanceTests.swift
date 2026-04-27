@@ -17,8 +17,8 @@ class PerformanceTests: XCTestCase {
         session.screen = screen
         screen.delegate = session
         screen.performBlock(joinedThreads: { _, mutableState, _ in
-            mutableState?.terminalEnabled = true
-            mutableState!.terminal!.termType = "xterm"
+            mutableState.terminalEnabled = true
+            mutableState.terminal?.termType = "xterm"
             screen.destructivelySetScreenWidth(width, height: height, mutableState: mutableState)
         })
         return screen
@@ -49,7 +49,7 @@ class PerformanceTests: XCTestCase {
         // edge cases like block drops during the measured loop.
         let screen = self.screen(width: 120, height: 50)
         screen.performBlock(joinedThreads: { _, ms, _ in
-            ms!.maxScrollbackLines = 100_000
+            ms.maxScrollbackLines = 100_000
         })
 
         // Pre-build tokens: 100 lines of 80-char ASCII + CRLF per gang call.
@@ -64,7 +64,7 @@ class PerformanceTests: XCTestCase {
             // Each iteration sends 100 gang calls of 100 lines each = 10,000 lines.
             screen.performBlock(joinedThreads: { _, ms, _ in
                 for _ in 0..<100 {
-                    ms!.terminalAppendMixedAsciiGang(tokens)
+                    ms.terminalAppendMixedAsciiGang(tokens)
                 }
             })
         }
@@ -75,7 +75,7 @@ class PerformanceTests: XCTestCase {
         // (the pre-gang-optimization path). This is the baseline to beat.
         let screen = self.screen(width: 120, height: 50)
         screen.performBlock(joinedThreads: { _, ms, _ in
-            ms!.maxScrollbackLines = 100_000
+            ms.maxScrollbackLines = 100_000
         })
 
         let lines = (0..<100).map { i -> String in
@@ -87,8 +87,8 @@ class PerformanceTests: XCTestCase {
             screen.performBlock(joinedThreads: { _, ms, _ in
                 for _ in 0..<100 {
                     for line in lines {
-                        ms!.appendString(atCursor: line)
-                        ms!.appendCarriageReturnLineFeed()
+                        ms.appendString(atCursor: line)
+                        ms.appendCarriageReturnLineFeed()
                     }
                 }
             })
@@ -312,4 +312,7 @@ class FakeSession: NSObject, VT100ScreenDelegate {
     func screenOffscreenCommandLineShouldBeVisibleForCurrentCommand() -> Bool { false }
     func screenUpdateBlock(_ blockID: String, action: iTermUpdateBlockAction) {}
     func screenPollLocalDirectoryOnly() {}
+    func screenDidShiftLinesAtAbsLine(_ absLine: Int64, by delta: Int64, mark: (any iTermWidthSavingMark)?, reason: iTermLinesShiftedReason, replacedRange: NSRange, converter: @escaping (VT100GridCoord) -> VT100GridCoord) {}
+    func screenResizeResilientCoordinates(_ convert: @escaping (VT100GridAbsCoord) -> VT100GridAbsCoord) {}
+    func screenSetTabStatus(_ status: VT100TabStatusUpdate) {}
 }

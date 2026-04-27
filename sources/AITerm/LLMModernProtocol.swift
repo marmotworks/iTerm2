@@ -14,16 +14,17 @@ struct CompletionsMessage: Codable, Equatable {
     var function_call: LLM.FunctionCall?
 
     // Modern OpenAI format: tool_calls array
-    struct ToolCall: Codable, Equatable {
-        var type: String?
-        var function: FunctionArg
-        var id: String?
+        struct ToolCall: Codable, Equatable {
+            var index: Int?  // Used in streaming to identify which tool call this delta belongs to
+            var type: String?
+            var function: FunctionArg
+            var id: String?
 
-        struct FunctionArg: Codable, Equatable {
-            var name: String?
-            var arguments: String?
+            struct FunctionArg: Codable, Equatable {
+                var name: String?
+                var arguments: String?
+            }
         }
-    }
     var tool_calls: [ToolCall]?
 
     init(role: LLM.Role? = .user,
@@ -277,7 +278,11 @@ struct LLMModernStreamingResponseParser: LLMStreamingResponseParser {
         }
 
         var choiceMessages: [LLM.Message] {
-            return choices.compactMap { choice -> LLM.Message? in
+            // Group choices by index and accumulate deltas
+            var indexMap: [Int: CompletionsMessage] = [:]
+            var hasIndex: Set<Int> = []
+            for choice in choices {
+                // Skip final chunks with finish_reason and empty delta
                 let isFinalToolCallChunk = (choice.finish_reason == "function_call" || choice.finish_reason == "tool_calls") &&
                     choice.delta.role == nil &&
                     choice.delta.content == nil &&
@@ -285,11 +290,76 @@ struct LLMModernStreamingResponseParser: LLMStreamingResponseParser {
                     choice.delta.function_call == nil &&
                     (choice.delta.tool_calls == nil || choice.delta.tool_calls!.isEmpty)
                 if isFinalToolCallChunk {
-                    return nil
+                    continue
                 }
-                return LLM.Message(role: .assistant,
-                                   content: choice.delta.coercedContentString,
-                                   function_call: choice.delta.function_call)
+                // Skip final chunk with stop and empty delta
+                if choice.finish_reason == "stop" &&
+                    choice.delta.role == nil &&
+                    choice.delta.content == nil &&
+                    choice.delta.functionName == nil &&
+                    choice.delta.function_call == nil &&
+                    (choice.delta.tool_calls == nil || choice.delta.tool_calls!.isEmpty) {
+                    continue
+                }
+
+                let isFirstDelta = !hasIndex.contains(choice.index)
+                var accumulated = indexMap[choice.index] ?? CompletionsMessage()
+                hasIndex.insert(choice.index)
+
+                // Set role from first delta
+                if isFirstDelta, let role = choice.delta.role {
+                    accumulated.role = role
+                }
+                // Accumulate content
+                if let content = choice.delta.content {
+                    switch (accumulated.content, content) {
+                    case (.string(let existing), .string(let delta)):
+                        accumulated.content = .string(existing + delta)
+                    case (.none, _):
+                        accumulated.content = content
+                    case (.string, .array), (.none, .array):
+                        accumulated.content = content
+                    default:
+                        break
+                    }
+                }
+                // Accumulate function call
+                if let deltaCall = choice.delta.function_call {
+                    if let existing = accumulated.function_call {
+                        accumulated.function_call = LLM.FunctionCall(
+                            name: (existing.name ?? "") + (deltaCall.name ?? ""),
+                            arguments: (existing.arguments ?? "") + (deltaCall.arguments ?? ""),
+                            id: existing.id ?? deltaCall.id)
+                    } else {
+                        accumulated.function_call = deltaCall
+                    }
+                }
+                // Accumulate tool calls by their index
+                if let deltaTools = choice.delta.tool_calls {
+                    var existingTools = accumulated.tool_calls ?? []
+                    for deltaTool in deltaTools {
+                        if let toolIdx = deltaTool.index, toolIdx < existingTools.count {
+                            var existing = existingTools[toolIdx]
+                            existing.function.name = (existing.function.name ?? "") + (deltaTool.function.name ?? "")
+                            existing.function.arguments = (existing.function.arguments ?? "") + (deltaTool.function.arguments ?? "")
+                            existing.id = existing.id ?? deltaTool.id
+                            existing.type = existing.type ?? deltaTool.type
+                            existingTools[toolIdx] = existing
+                        } else if deltaTool.function.name != nil || deltaTool.function.arguments != nil {
+                            existingTools.append(deltaTool)
+                        }
+                    }
+                    accumulated.tool_calls = existingTools
+                }
+                // Accumulate function name
+                if let fn = choice.delta.functionName, accumulated.functionName == nil {
+                    accumulated.functionName = fn
+                }
+                indexMap[choice.index] = accumulated
+            }
+
+            return indexMap.sorted(by: { $0.key < $1.key }).map { _, msg in
+                msg.llmMessage
             }
         }
     }
