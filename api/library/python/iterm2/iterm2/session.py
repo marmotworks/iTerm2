@@ -1120,8 +1120,12 @@ class ProxySession(Session):
     contents of "all" sessions.
     """
     def __init__(self, connection, session_id):
-        super().__init__(connection, session_id)
+        summary = iterm2.api_pb2.SessionSummary()
+        summary.unique_identifier = session_id
+        summary.title = session_id
+        super().__init__(connection, None, summary)
         self.__session_id = session_id
+        self.buried = False
 
     def __repr__(self):
         return "<ProxySession %s>" % self.__session_id

@@ -149,6 +149,12 @@ class LocalWriteOnlyProfile:
         """Returns the internal values dict."""
         return self.__values
 
+    def __iter__(self):
+        return iter(self.__values)
+
+    def __getitem__(self, key):
+        return self.__values[key]
+
     def _simple_set(self, key, value):
         """value is a json type"""
         if key is None:
