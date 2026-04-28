@@ -1,5 +1,8 @@
 """Tests for iterm2.color module."""
+from unittest.mock import patch
+
 import pytest
+from iterm2 import color
 from iterm2.color import Color, ColorSpace, MissingDependency
 
 
@@ -158,13 +161,15 @@ class TestMissingDependency:
 
     def test_from_cocoa_without_pyobjc(self):
         """Test that from_cocoa raises MissingDependency without pyobjc."""
-        with pytest.raises(MissingDependency):
-            Color.from_cocoa("dGVzdA==")
+        with patch.object(color, 'gAppKitAvailable', False):
+            with pytest.raises(MissingDependency):
+                Color.from_cocoa("dGVzdA==")
 
     def test_from_legacy_trigger_without_pyobjc(self):
         """Test that from_legacy_trigger raises MissingDependency without pyobjc."""
-        with pytest.raises(MissingDependency):
-            Color.from_legacy_trigger("0")
+        with patch.object(color, 'gAppKitAvailable', False):
+            with pytest.raises(MissingDependency):
+                Color.from_legacy_trigger("0")
 
 
 class TestColorRepr:
