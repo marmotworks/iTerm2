@@ -76,6 +76,10 @@ help:
 	@echo "  make test         Run unit tests"
 	@echo "  make install      Build Deployment and install to /Applications"
 	@echo ""
+	@echo "Linting:"
+	@echo "  make swiftlint    Lint Swift files with SwiftLint"
+	@echo "  make oclint       Lint ObjC/C files with OCLint (may not work with Xcode 26+)"
+	@echo ""
 	@echo "Dependencies:"
 	@echo "  make paranoid-deps  Rebuild all native dependencies (sandboxed)"
 	@echo "  make DepsIfNeeded   Rebuild deps only if Xcode version changed"
@@ -252,6 +256,8 @@ doctor:
 	@printf "  %-18s" "rustup:"; (PATH="$(ORIG_PATH):$(HOME)/.cargo/bin" rustup --version 2>/dev/null) || echo "NOT FOUND"
 	@printf "  %-18s" "cbindgen:"; (PATH="$(ORIG_PATH):$(HOME)/.cargo/bin" cbindgen --version 2>/dev/null) || echo "NOT FOUND"
 	@printf "  %-18s" "sf-symbols:"; (PATH="$(ORIG_PATH)" brew list --cask sf-symbols >/dev/null 2>&1 && echo "installed") || echo "NOT FOUND"
+	@printf "  %-18s" "swiftlint:"; (swiftlint version 2>/dev/null) || echo "NOT FOUND — brew install swiftlint"
+	@printf "  %-18s" "oclint:"; (oclint --version 2>/dev/null | head -1 && echo "(NOTE: may not work with Xcode 26+)") || echo "NOT FOUND — brew install oclint"
 
 TAGS:
 	find . -name "*.[mhMH]" -exec etags -o ./TAGS -a '{}' +
@@ -567,5 +573,24 @@ cleandeps: force
 
 test: force
 	tools/run_tests.expect ModernTests
+
+# Linting
+swiftlint: force
+	swiftlint lint --config .swiftlint.yml
+
+oclint: force
+	@echo "WARNING: OCLint may not be compatible with Xcode 26+."
+	@echo "If oclint-xcodebuild hangs, use an older Xcode or skip this target."
+	oclint-xcodebuild -scheme iTerm2 -configuration Development -destination 'platform=macOS' \
+		-quiet $(SIGNING_FLAGS) $(ARCH_FLAGS) SYMROOT="$(BUILD_DIR)" \
+		-rc LONG_LINE=200 \
+		-rc CYCLOMATIC_COUNT=20 \
+		-rc METHOD_LENGTH=200 \
+		-rc FILE_LENGTH=2000 \
+		-rc PARAMETER_COUNT=10 \
+		-rc MAX_PRIORITY_1=0 \
+		-rc MAX_PRIORITY_2=5 \
+		-rc MAX_PRIORITY_3=10 \
+		-- -o oclint-report.xml -- -p oclint
 
 force:

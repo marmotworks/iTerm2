@@ -1,0 +1,123 @@
+# SwiftLint configuration for iTerm2
+# Conservative settings for existing codebase — catches bugs, tolerates legacy style.
+# https://github.com/realm/SwiftLint
+
+# Exclude generated, third-party, and build artifacts
+excluded:
+  - ThirdParty
+  - submodules
+  - DerivedData
+  - Build
+  - build
+  - "*.pb.swift"
+  - "*.generated.swift"
+
+# Opt-in rules focused on correctness and common mistakes
+opt_in_rules:
+  - closure_spacing
+  - contains_over_first_not_nil
+  - fatal_error_message
+  - first_where
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - lower_acl_than_previous
+  - modifier_order
+  - nsobject_prefer_isequal
+  - overridden_super_call
+  - pattern_match_keyword
+  - prohibited_super_call
+  - redundant_nil_coalescing
+  - sorted_first_last
+  - toggleable_bool_definition
+  - unneeded_parentheses_in_closure_argument
+  - yoda_condition
+
+# Disabled rules (enabled by default, disabled here)
+disabled_rules:
+  - todo
+  - non_optional_string_data_conversion
+  - trailing_whitespace
+  - vertical_whitespace
+  - vertical_whitespace_closing_braces
+  - mark
+  - private_over_fileprivate
+  - trailing_semicolon
+  - trailing_comma
+  - multiline_arguments
+  - multiline_arguments_brackets
+  - multiline_parameters
+  - multiline_parameters_brackets
+  - indentation_width
+  - file_name_no_space
+  - type_name
+  - identifier_name
+  - function_parameter_count
+  - large_tuple
+  - nesting
+  - void_return
+  - implicit_optional_initialization
+  - trailing_newline
+  - empty_enum_arguments
+  - prefer_for_where
+  - syntactic_sugar
+  - redundant_objc_attribute
+  - vertical_parameter_alignment
+  - closure_end_indentation
+  - empty_count
+  - shorthand_operator
+
+# Analyzer rules
+analyzer_rules:
+  - capture_variable
+
+# Line and file length (generous for legacy code)
+line_length:
+  warning: 250
+  error: 400
+  ignores_urls: true
+  ignores_function_declarations: true
+  ignores_comments: true
+
+file_length:
+  warning: 3500
+  error: 5000
+  ignore_comment_only_lines: true
+
+type_body_length:
+  warning: 2000
+  error: 3000
+
+function_body_length:
+  warning: 150
+  error: 300
+
+# Force rules: warning only (too many existing violations to block builds)
+force_unwrapping:
+  severity: warning
+  excludes:
+    - ModernTests
+    - PerformanceTests
+
+force_try:
+  severity: warning
+  excludes:
+    - ModernTests
+    - PerformanceTests
+
+force_cast:
+  severity: warning
+
+implicitly_unwrapped_optional:
+  severity: warning
+
+# Complexity thresholds
+cyclomatic_complexity:
+  warning: 25
+  error: 40
+
+# Warning/error thresholds (percentage of files that can have violations)
+warning_percent: 50
+error_percent: 25
+
+# Report style
+reporter: xcode
