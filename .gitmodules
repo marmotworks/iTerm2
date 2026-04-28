@@ -24,7 +24,7 @@
 	ignore = dirty
 [submodule "submodules/fmdb"]
 	path = submodules/fmdb
-	url = https://github.com/ccgus/fmdb
+	url = https://github.com/marmotworks/fmdb
 [submodule "submodules/libgit2"]
 	path = submodules/libgit2
 	url = https://github.com/libgit2/libgit2
@@ -36,7 +36,7 @@
 	url = https://github.com/gnachman/MultiCursor
 [submodule "submodules/SwiftyMarkdown"]
 	path = submodules/SwiftyMarkdown
-	url = https://github.com/gnachman/SwiftyMarkdown
+	url = https://github.com/marmotworks/SwiftyMarkdown
 [submodule "submodules/Highlightr"]
 	path = submodules/Highlightr
 	url = https://github.com/gnachman/Highlightr
