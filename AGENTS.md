@@ -99,7 +99,6 @@ assert(value != nil)
 | Tool | Command | Notes |
 |---|---|---|
 | **Compiler** | `make run` or `tools/build.sh` | Treat warnings as errors. Fix any new warnings before committing. |
-| **OCLint** | `make oclint` | Static analysis. Config in `.oclint.json`. **May not work with Xcode 26+** — OCLint is unmaintained. Use compiler warnings as primary check. |
 
 **Python API** (`api/library/python/iterm2/`):
 
