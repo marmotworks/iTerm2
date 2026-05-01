@@ -11,7 +11,7 @@ import AppKit
 class SearchableComboTableView: NSTableView {
     static let enterNotificationName = Notification.Name("SearchableComboTableView.Enter")
     private(set) var handlingKeyDown = false
-    public override func keyDown(with event: NSEvent) {
+    override public func keyDown(with event: NSEvent) {
         if event.characters == "\r" {
             delegate?.tableViewSelectionDidChange?(Notification(name: Self.enterNotificationName))
         }

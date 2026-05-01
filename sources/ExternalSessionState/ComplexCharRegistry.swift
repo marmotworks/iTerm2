@@ -173,7 +173,7 @@ private class ComplexCharRegistryImpl: NSObject {
     private var _nextCode = unichar(1)
 
     var nextCode: unichar {
-        while (true) {
+        while true {
             if _nextCode >= maxKey {
                 _nextCode = 0
                 hasWrapped = true
@@ -184,7 +184,7 @@ private class ComplexCharRegistryImpl: NSObject {
                 hasWrapped = true
             }
             _nextCode += 1
-            if (!reserved(candidate)) {
+            if !reserved(candidate) {
                 return candidate
             }
         }

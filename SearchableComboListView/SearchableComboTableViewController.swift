@@ -56,7 +56,7 @@ class SearchableComboTableViewController: NSViewController {
                 if query.matchesDocumentTokens(group.labelTokens) {
                     return true
                 }
-                return group.items.first(where: { query.matchesDocumentTokens($0.labelTokens) }) != nil
+                return group.items.contains { query.matchesDocumentTokens($0.labelTokens) }
             }
         }
     }
@@ -140,8 +140,8 @@ class SearchableComboTableViewController: NSViewController {
 
         NotificationCenter.default.addObserver(forName: NSView.frameDidChangeNotification,
                                                object: scrollView,
-                                               queue: nil) { [weak self] (notification) in
-                                                self?.layOutTableView()
+                                              queue: nil) { [weak self] _ in
+                                                 self?.layOutTableView()
         }
         layOutTableView()
 

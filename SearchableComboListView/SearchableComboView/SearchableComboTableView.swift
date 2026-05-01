@@ -41,12 +41,13 @@ class SearchableComboTableView: NSTableView, MouseObservingTableView {
     }
 
     override func awakeFromNib() {
+        super.awakeFromNib()
         if #available(macOS 11.0, *) {
             style = .sourceList
         }
     }
 
-    public override func keyDown(with event: NSEvent) {
+    override public func keyDown(with event: NSEvent) {
         if event.modifierFlags.contains(.function) {
             handlingKeyDown = true
             super.keyDown(with: event)
@@ -120,7 +121,7 @@ class SearchableComboTableView: NSTableView, MouseObservingTableView {
         searchableComboTableViewDelegate?.searchableComboTableView(self, didClickRow: selectableRowAt(event.locationInWindow))
     }
 
-    public override func performKeyEquivalent(with event: NSEvent) -> Bool {
+    override public func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.keyCode == 51 /* delete */ {
             _ = delegate?.tableView?(self, shouldTypeSelectFor: event, withCurrentSearch: nil)
             return true

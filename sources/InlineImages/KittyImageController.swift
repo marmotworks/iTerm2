@@ -253,7 +253,10 @@ class KittyImageController: NSObject {
         DLog("execute(command:) BEGIN - category=\(command.category) action=\(command.action) payloadLength=\(command.payload.count)")
         switch command.category {
         case .imageTransmission(let imageTransmission):
-            DLog("execute: .imageTransmission - id=\(imageTransmission.identifier) (0x\(String(imageTransmission.identifier, radix: 16))) imageNumber=\(imageTransmission.imageNumber) more=\(imageTransmission.more) medium=\(imageTransmission.medium) format=\(imageTransmission.format) compression=\(imageTransmission.compression) width=\(imageTransmission.width) height=\(imageTransmission.height) verbosity=\(imageTransmission.verbosity)")
+            DLog("execute: .imageTransmission - id=\(imageTransmission.identifier) (0x\(String(imageTransmission.identifier, radix: 16))) " +
+                "imageNumber=\(imageTransmission.imageNumber) more=\(imageTransmission.more) medium=\(imageTransmission.medium) " +
+                "format=\(imageTransmission.format) compression=\(imageTransmission.compression) " +
+                "width=\(imageTransmission.width) height=\(imageTransmission.height) verbosity=\(imageTransmission.verbosity)")
             let result = executeTransmit(imageTransmission,
                                 display: nil,
                                 payload: command.payload,
@@ -263,7 +266,10 @@ class KittyImageController: NSObject {
             DLog("execute: .imageDisplay - id=\(imageDisplay.identifier) (0x\(String(imageDisplay.identifier, radix: 16))) placement=\(imageDisplay.placement) createUnicodePlaceholder=\(imageDisplay.createUnicodePlaceholder) rows=\(imageDisplay.r) cols=\(imageDisplay.c) q=\(imageDisplay.q)")
             executeDisplay(imageDisplay)
         case .transmitAndDisplay(let imageTransmission, let imageDisplay):
-            DLog("execute: .transmitAndDisplay - transmit.id=\(imageTransmission.identifier) (0x\(String(imageTransmission.identifier, radix: 16))) transmit.imageNumber=\(imageTransmission.imageNumber) transmit.more=\(imageTransmission.more) transmit.medium=\(imageTransmission.medium) transmit.format=\(imageTransmission.format) transmit.compression=\(imageTransmission.compression) transmit.verbosity=\(imageTransmission.verbosity)")
+            DLog("execute: .transmitAndDisplay - transmit.id=\(imageTransmission.identifier) (0x\(String(imageTransmission.identifier, radix: 16))) " +
+                "transmit.imageNumber=\(imageTransmission.imageNumber) transmit.more=\(imageTransmission.more) " +
+                "transmit.medium=\(imageTransmission.medium) transmit.format=\(imageTransmission.format) " +
+                "transmit.compression=\(imageTransmission.compression) transmit.verbosity=\(imageTransmission.verbosity)")
             DLog("execute: .transmitAndDisplay - display.id=\(imageDisplay.identifier) (0x\(String(imageDisplay.identifier, radix: 16))) display.placement=\(imageDisplay.placement) display.createUnicodePlaceholder=\(imageDisplay.createUnicodePlaceholder) display.rows=\(imageDisplay.r) display.cols=\(imageDisplay.c) display.q=\(imageDisplay.q)")
             let hadAccumulator = (accumulator != nil)
             let savedDisplay = accumulator?.display

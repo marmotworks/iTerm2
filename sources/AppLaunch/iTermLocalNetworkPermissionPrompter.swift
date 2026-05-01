@@ -21,7 +21,7 @@ class LocalNetworkPermissionPrompter: NSObject {
 
     @objc static let shared = LocalNetworkPermissionPrompter()
 
-    private override init() {
+    override private init() {
         super.init()
     }
 
@@ -82,7 +82,7 @@ class LocalNetworkPermissionPrompter: NSObject {
             }
         }
 
-        browser?.browseResultsChangedHandler = { results, changes in
+        browser?.browseResultsChangedHandler = { results, _ in
             // We don't care about the actual results, just that we prompted for permission
             DLog("Local network browser found \(results.count) services")
         }

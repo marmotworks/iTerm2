@@ -336,7 +336,7 @@ class ModernKeyMapper: NSObject, iTermKeyMapper {
         return result
     }
 
-    func keyMapperDictionaryValue() -> [AnyHashable : Any] {
+    func keyMapperDictionaryValue() -> [AnyHashable: Any] {
         DLog("keyMapperDictionaryValue")
         let result = impl.keyMapperDictionaryValue()
         DLog("return \(result)")
@@ -347,8 +347,9 @@ class ModernKeyMapper: NSObject, iTermKeyMapper {
         return impl.transformedText(toInsert: text)
     }
 
+
     func wouldReportControlReturn() -> Bool {
-        return !flags.intersection([.reportAllEventTypes, .reportAllKeysAsEscapeCodes]).isEmpty
+        return flags.isDisjoint(with: [.reportAllEventTypes, .reportAllKeysAsEscapeCodes])
     }
 
     func keyMapperData(forKeyUp nsevent: NSEvent) -> Data? {
@@ -486,7 +487,6 @@ fileprivate class ModernKeyMapperImpl {
             }
         case .flagsChanged:
             DLog("flags changed")
-            break
         default:
             DLog("unexpected event type")
             return nil
@@ -527,7 +527,7 @@ fileprivate class ModernKeyMapperImpl {
         return !shouldIgnore(event: event)
     }
 
-    func keyMapperDictionaryValue() -> [AnyHashable : Any] {
+    func keyMapperDictionaryValue() -> [AnyHashable: Any] {
         return ["flags": NSNumber(value: flags.rawValue)]
     }
 
@@ -1075,9 +1075,9 @@ fileprivate struct KeyReport {
                 // We don't bother reporting shifted and base if they're the
                 // same as the unicode code.
                 if event.modifiers.cooked.reportableFlags.contains(.shift) {
-                    if (event.csiUNumber == event.baseLayoutKeyCode &&
+                    if event.csiUNumber == event.baseLayoutKeyCode &&
                         (event.shiftedKeyCode == nil ||
-                         event.csiUNumber == event.shiftedKeyCode)) {
+                         event.csiUNumber == event.shiftedKeyCode) {
                         return [event.csiUNumber]
                     } else if event.csiUNumber == event.baseLayoutKeyCode {
                         return [event.csiUNumber, event.shiftedKeyCode]
@@ -1085,7 +1085,7 @@ fileprivate struct KeyReport {
                         return [event.csiUNumber, event.shiftedKeyCode, event.baseLayoutKeyCode]
                     }
                 } else {
-                    if (event.csiUNumber == event.baseLayoutKeyCode || event.baseLayoutKeyCode == 0) {
+                    if event.csiUNumber == event.baseLayoutKeyCode || event.baseLayoutKeyCode == 0 {
                         return [event.csiUNumber]
                     } else {
                         return [event.csiUNumber, nil, event.baseLayoutKeyCode]

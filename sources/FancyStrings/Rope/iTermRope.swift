@@ -392,7 +392,7 @@ extension iTermRope: iTermString {
                             rebaseTo newBaseIndex: Int) -> IndexSet {
         var result = IndexSet()
         var offset = 0
-        enumerateSegments(inRange: Range(nsrange)!) { i, string, localRange in
+        enumerateSegments(inRange: Range(nsrange)!) { _, string, localRange in
             let part = string.doubleWidthIndexes(range: NSRange(localRange),
                                                  rebaseTo: offset)
             offset += localRange.count
@@ -417,7 +417,7 @@ extension iTermRope: iTermString {
                  sourceRange: NSRange) {
         it_assert(fullRange.contains(sourceRange), "Source range \(sourceRange) out of bounds in rope of length \(cellCount)")
         var o = 0
-        enumerateSegments(inRange: Range(sourceRange)!) { i, seg, localRange in
+        enumerateSegments(inRange: Range(sourceRange)!) { _, seg, localRange in
             seg.hydrate(into: msca,
                         destinationIndex: destinationIndex + o,
                         sourceRange: NSRange(localRange))
@@ -434,7 +434,7 @@ extension iTermRope: iTermString {
     }
 
     func buildString(range: NSRange, builder: DeltaStringBuilder) {
-        enumerateSegments(inRange: Range(range)!) { i, seg, segmentRange in
+        enumerateSegments(inRange: Range(range)!) { _, seg, segmentRange in
             seg.buildString(range: NSRange(segmentRange), builder: builder)
         }
     }

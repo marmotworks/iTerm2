@@ -64,7 +64,7 @@ extension SubData: Sequence {
 
 
 extension SubData: Equatable {
-    static func ==(lhs: SubData, rhs: SubData) -> Bool {
+    static func == (lhs: SubData, rhs: SubData) -> Bool {
         if lhs.range.count != rhs.range.count {
             return false
         }

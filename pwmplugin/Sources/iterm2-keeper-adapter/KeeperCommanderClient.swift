@@ -425,9 +425,9 @@ private func extractPasswordFromRawGet(data: Data) -> String? {
         let t = trim(decoded)
         if !t.isEmpty { return t }
     }
-    if let wrapper = try? JSONDecoder().decode(KeeperV2ResultWrapper.self, from: data),
-       (wrapper.status == "success" || wrapper.status == "completed"),
-       let resultStr = wrapper.result {
+   if let wrapper = try? JSONDecoder().decode(KeeperV2ResultWrapper.self, from: data),
+        wrapper.status == "success" || wrapper.status == "completed",
+        let resultStr = wrapper.result {
         let t = trim(resultStr)
         if !t.isEmpty { return t }
     }

@@ -15,7 +15,7 @@ protocol SearchableComboListSearchFieldDelegate: NSObjectProtocol {
 @objc(iTermSearchableComboListSearchField)
 class SearchableComboListSearchField: NSSearchField {
     @IBOutlet weak var searchableComboListSearchFieldDelegate: SearchableComboListSearchFieldDelegate?
-    public override func performKeyEquivalent(with event: NSEvent) -> Bool {
+    override public func performKeyEquivalent(with event: NSEvent) -> Bool {
         if let theDelegate = searchableComboListSearchFieldDelegate {
             return theDelegate.searchFieldPerformKeyEquivalent(with: event)
         }

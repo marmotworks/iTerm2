@@ -38,7 +38,7 @@ public class SearchableComboViewItem: NSObject {
     public let tag: Int
     public let identifier: String?
     public let labelTokens: [String]
-    internal(set) public weak var group: SearchableComboViewGroup?
+    public internal(set) weak var group: SearchableComboViewGroup?
 
     @objc(initWithLabel:tag:)
     public init(_ label: String, tag: Int) {
@@ -60,20 +60,20 @@ public class SearchableComboViewItem: NSObject {
 @objc(iTermSearchableComboView)
 open class SearchableComboView: NSPopUpButton {
     public class Panel: NSPanel {
-        public override var canBecomeKey: Bool {
+        override public var canBecomeKey: Bool {
             return true
         }
 
-        public override func animationResizeTime(_ newFrame: NSRect) -> TimeInterval {
+        override public func animationResizeTime(_ newFrame: NSRect) -> TimeInterval {
             return 0.167
         }
 
-        public override func cancelOperation(_ sender: Any?) {
+        override public func cancelOperation(_ sender: Any?) {
             parent?.removeChildWindow(self)
             orderOut(nil)
         }
 
-        public override func resignKey() {
+        override public func resignKey() {
             super.resignKey()
             parent?.removeChildWindow(self)
             orderOut(nil)
@@ -89,29 +89,27 @@ open class SearchableComboView: NSPopUpButton {
     private let defaultTitle: String
 
     private var panel: Panel {
-        get {
-            if let internalPanel = internalPanel {
-                return internalPanel
-            }
-            let newPanel = Panel(contentRect: NSRect(x: 0, y: 0, width: 100, height: 100),
-                                 styleMask: [.resizable, .fullSizeContentView],
-                                 backing: .buffered,
-                                 defer: true)
-            newPanel.hidesOnDeactivate = false
-            newPanel.orderOut(nil)
-            newPanel.contentView?.addSubview(listViewController.view)
-            newPanel.isOpaque = false
-
-            newPanel.contentView?.wantsLayer = true;
-            newPanel.contentView?.layer?.cornerRadius = 6;
-            newPanel.contentView?.layer?.masksToBounds = true;
-            newPanel.contentView?.layer?.borderColor = NSColor(white: 0.66, alpha: 1).cgColor
-            newPanel.contentView?.layer?.borderWidth = 0.5;
-
-            internalPanel = newPanel
-
-            return newPanel
+        if let internalPanel = internalPanel {
+            return internalPanel
         }
+        let newPanel = Panel(contentRect: NSRect(x: 0, y: 0, width: 100, height: 100),
+                             styleMask: [.resizable, .fullSizeContentView],
+                             backing: .buffered,
+                             defer: true)
+        newPanel.hidesOnDeactivate = false
+        newPanel.orderOut(nil)
+        newPanel.contentView?.addSubview(listViewController.view)
+        newPanel.isOpaque = false
+
+        newPanel.contentView?.wantsLayer = true;
+        newPanel.contentView?.layer?.cornerRadius = 6;
+        newPanel.contentView?.layer?.masksToBounds = true;
+        newPanel.contentView?.layer?.borderColor = NSColor(white: 0.66, alpha: 1).cgColor
+        newPanel.contentView?.layer?.borderWidth = 0.5;
+
+        internalPanel = newPanel
+
+        return newPanel
     }
 
     private func postInit() {
@@ -126,7 +124,7 @@ open class SearchableComboView: NSPopUpButton {
         return "Select Action…"
     }
 
-    required public init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         listViewController = SearchableComboListViewController(groups: Self.groups())
         defaultTitle = Self.defaultTitleValue()
         super.init(coder: coder)
@@ -174,7 +172,7 @@ open class SearchableComboView: NSPopUpButton {
         return false
     }
 
-    open override func selectItem(withTitle title: String) {
+    override open func selectItem(withTitle title: String) {
         if let item = listViewController.item(withTitle: title) {
             setTitle(item.label)
             listViewController.selectedItem = item
@@ -193,7 +191,7 @@ open class SearchableComboView: NSPopUpButton {
         showPanel()
     }
 
-    @objc open override var selectedItem: NSMenuItem? {
+    @objc override open var selectedItem: NSMenuItem? {
         let item = NSMenuItem()
         guard let myItem = listViewController.tableViewController?.selectedItem else {
             return nil

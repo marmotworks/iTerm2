@@ -1140,9 +1140,6 @@ extension iTermBrowserManager {
         case iTermBrowserAudioHandler.messageHandlerName:
             audioHandler?.handleMessage(webView: webView, message: message)
 
-        case iTermBrowserFindManager.messageHandlerName:
-            browserFindManager?.handleMessage(webView: webView, message: message)
-
         case iTermBrowserEditingDetectorHandler.messageHandlerName:
             editingDetector?.handleMessage(webView: webView, message: message)
 

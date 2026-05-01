@@ -119,10 +119,9 @@ struct SegmentMap<Payload: Equatable>: Equatable {
     /// Merges a new block into the last one if payloads match, or appends it.
     mutating func appendBlock(_ newBlock: Block) {
         if var lastBlock = blocks.popLast() {
-            if let lastRun = lastBlock.runs.last,
+           if let lastRun = lastBlock.runs.last,
                let firstNewRun = newBlock.runs.first,
-               lastRun.payload == firstNewRun.payload
-            {
+               lastRun.payload == firstNewRun.payload {
                 // merge first run
                 var merged = lastRun
                 merged.count += firstNewRun.count

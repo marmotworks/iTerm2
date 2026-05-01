@@ -115,9 +115,6 @@ class iTermBrowserErrorHandler: NSObject, iTermBrowserPageHandler {
             case NSURLErrorResourceUnavailable:
                 return ("Page Unavailable", "The requested page is currently unavailable. Try again later.", nil)
 
-            case NSURLErrorNotConnectedToInternet:
-                return ("No Internet Connection", "Your computer is not connected to the internet. Check your connection and try again.", nil)
-
             case NSURLErrorServerCertificateUntrusted, NSURLErrorSecureConnectionFailed:
                 return ("Secure Connection Failed", "iTerm2 can’t verify the identity of the website. The connection may not be secure.", sslErrorDetails(from: error))
 

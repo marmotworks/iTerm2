@@ -72,29 +72,27 @@ public class SearchableComboView: NSPopUpButton {
     public var maxHeight: CGFloat = 600
 
     private var panel: Panel {
-        get {
-            if let internalPanel = internalPanel {
-                return internalPanel
-            }
-            let newPanel = Panel(contentRect: NSRect(x: 0, y: 0, width: 100, height: 100),
-                                 styleMask: [.resizable, .fullSizeContentView],
-                                 backing: .buffered,
-                                 defer: true)
-            newPanel.hidesOnDeactivate = false
-            newPanel.orderOut(nil)
-            newPanel.contentView?.addSubview(listViewController.view)
-            newPanel.isOpaque = false
-
-            newPanel.contentView?.wantsLayer = true;
-            newPanel.contentView?.layer?.cornerRadius = 6;
-            newPanel.contentView?.layer?.masksToBounds = true;
-            newPanel.contentView?.layer?.borderColor = NSColor(white: 0.66, alpha: 1).cgColor
-            newPanel.contentView?.layer?.borderWidth = 0.5;
-
-            internalPanel = newPanel
-
-            return newPanel
+        if let internalPanel = internalPanel {
+            return internalPanel
         }
+        let newPanel = Panel(contentRect: NSRect(x: 0, y: 0, width: 100, height: 100),
+                             styleMask: [.resizable, .fullSizeContentView],
+                             backing: .buffered,
+                             defer: true)
+        newPanel.hidesOnDeactivate = false
+        newPanel.orderOut(nil)
+        newPanel.contentView?.addSubview(listViewController.view)
+        newPanel.isOpaque = false
+
+        newPanel.contentView?.wantsLayer = true;
+        newPanel.contentView?.layer?.cornerRadius = 6;
+        newPanel.contentView?.layer?.masksToBounds = true;
+        newPanel.contentView?.layer?.borderColor = NSColor(white: 0.66, alpha: 1).cgColor
+        newPanel.contentView?.layer?.borderWidth = 0.5;
+
+        internalPanel = newPanel
+
+        return newPanel
     }
 
     private func postInit() {

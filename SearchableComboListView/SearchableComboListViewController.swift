@@ -23,17 +23,17 @@ class SearchableComboListViewController: NSViewController {
     let groups: [SearchableComboViewGroup]
     public var selectedItem: SearchableComboViewItem? {
         didSet {
-            let _ = view
+            _ = view
             tableViewController!.selectedTag = selectedItem?.tag ?? -1
         }
     }
 
     public var insets: NSEdgeInsets {
         let frame = view.convert(searchField.bounds, from: searchField)
-        return NSEdgeInsets(top: NSMaxY(view.bounds) - NSMaxY(frame),
-                            left: NSMinX(frame),
+        return NSEdgeInsets(top: view.bounds.maxY - frame.maxY,
+                            left: frame.minX,
                             bottom: 0,
-                            right: NSMaxX(view.bounds) - NSMaxX(frame))
+                            right: view.bounds.maxX - frame.maxX)
     }
     public var tableViewController: SearchableComboTableViewController?
 
@@ -50,7 +50,8 @@ class SearchableComboListViewController: NSViewController {
         preconditionFailure()
     }
 
-    public override func awakeFromNib() {
+    override public func awakeFromNib() {
+        super.awakeFromNib()
         tableViewController = SearchableComboTableViewController(tableView: tableView, groups: groups)
         tableViewController?.delegate = self
         visualEffectView.blendingMode = .behindWindow;
@@ -60,11 +61,9 @@ class SearchableComboListViewController: NSViewController {
 
     func item(withTag tag: Int) -> SearchableComboViewItem? {
         for group in groups {
-            for item in group.items {
-                if item.tag == tag {
+            for item in group.items where item.tag == tag {
                     return item
                 }
-            }
         }
         return nil
     }
@@ -76,7 +75,7 @@ extension SearchableComboListViewController: NSTextFieldDelegate {
         tableViewController?.filter = searchField.stringValue
     }
 
-    public override func viewWillAppear() {
+    override public func viewWillAppear() {
         view.window?.makeFirstResponder(searchField)
     }
 }

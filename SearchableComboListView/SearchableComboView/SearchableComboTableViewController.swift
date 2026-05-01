@@ -88,7 +88,7 @@ class SearchableComboTableViewController: NSViewController {
         }
         let sampleColumnWidths = tableView.tableColumns.map { $0.width }.reduce(0.0) { $0 + $1 }
         let overhead = sampleRowView.bounds.width - sampleColumnWidths
-        let widths = unfilteredRows.enumerated().map { (index, _) -> CGFloat in
+        let widths = unfilteredRows.enumerated().map { index, _ -> CGFloat in
             return sumOfColumnWidths(row: index) + overhead
         }
         // I have no idea where 16 comes from. It's necessary on macOS 12 to prevent TableView.tile()
@@ -106,7 +106,7 @@ class SearchableComboTableViewController: NSViewController {
         defer {
             filter = saved
         }
-        let widths = unfilteredRows.enumerated().map { (index, _) -> CGFloat in
+        let widths = unfilteredRows.enumerated().map { index, _ -> CGFloat in
             return sumOfColumnWidths(row: index)
         }
         if let maxWidth = widths.max() {
@@ -166,7 +166,7 @@ class SearchableComboTableViewController: NSViewController {
                 if query.matchesDocumentTokens(group.labelTokens) {
                     return true
                 }
-                return group.items.first(where: { query.matchesDocumentTokens($0.labelTokens) }) != nil
+                return group.items.contains { query.matchesDocumentTokens($0.labelTokens) }
             }
         }
         var isSelectable: Bool {
@@ -286,10 +286,10 @@ class SearchableComboTableViewController: NSViewController {
         scrollView.hasVerticalScroller = false
         scrollView.hasHorizontalScroller = false
 
-        NotificationCenter.default.addObserver(forName: NSView.frameDidChangeNotification,
-                                               object: scrollView,
-                                               queue: nil) { [weak self] (notification) in
-                                                self?.layOutTableView()
+       NotificationCenter.default.addObserver(forName: NSView.frameDidChangeNotification,
+                                                object: scrollView,
+                                                queue: nil) { [weak self] _ in
+                                                 self?.layOutTableView()
         }
         layOutTableView()
 
@@ -306,11 +306,9 @@ class SearchableComboTableViewController: NSViewController {
     // MARK:- Helpers
 
     private func rowIndex(withTag tag: Int) -> Int? {
-        for (i, row) in filteredRows.enumerated() {
-            if row.tag == tag {
+        for (i, row) in filteredRows.enumerated() where row.tag == tag {
                 return i
             }
-        }
         return nil
     }
 

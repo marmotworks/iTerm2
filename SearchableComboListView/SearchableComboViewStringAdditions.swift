@@ -12,8 +12,7 @@ extension String {
         var words: [String] = []
         enumerateSubstrings(
             in: startIndex..<endIndex,
-            options: .byWords) {
-                (substring, substringRange, enclosingRange, stop) in
+            options: .byWords) { substring, _, _, _ in
                 if let substring = substring {
                     words.append(substring.localizedLowercase)
                 }

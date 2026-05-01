@@ -31,17 +31,17 @@ class SearchableComboListViewController: NSViewController {
 
     public var selectedItem: SearchableComboViewItem? {
         didSet {
-            let _ = view
+            _ = view
             tableViewController!.selectedTag = selectedItem?.tag ?? -1
         }
     }
 
     public var insets: NSEdgeInsets {
         let frame = view.convert(searchField.bounds, from: searchField)
-        return NSEdgeInsets(top: NSMaxY(view.bounds) - NSMaxY(frame),
-                            left: NSMinX(frame),
+        return NSEdgeInsets(top: view.bounds.maxY - frame.maxY,
+                            left: frame.minX,
                             bottom: 0,
-                            right: NSMaxX(view.bounds) - NSMaxX(frame))
+                            right: view.bounds.maxX - frame.maxX)
     }
 
     var desiredHeight: CGFloat {
@@ -69,7 +69,8 @@ class SearchableComboListViewController: NSViewController {
         preconditionFailure()
     }
 
-    public override func awakeFromNib() {
+    override public func awakeFromNib() {
+        super.awakeFromNib()
         tableViewController = SearchableComboTableViewController(tableView: tableView, groups: groups)
         tableViewController?.delegate = self
         tableView?.enclosingScrollView?.hasHorizontalScroller = false
@@ -80,10 +81,8 @@ class SearchableComboListViewController: NSViewController {
 
     func item(withTag tag: Int) -> SearchableComboViewItem? {
         for group in groups {
-            for item in group.items {
-                if item.tag == tag {
-                    return item
-                }
+            for item in group.items where item.tag == tag {
+                return item
             }
         }
         return nil
@@ -105,10 +104,8 @@ class SearchableComboListViewController: NSViewController {
 
     func item(withTitle title: String) -> SearchableComboViewItem? {
         for group in groups {
-            for item in group.items {
-                if item.label == title {
-                    return item
-                }
+            for item in group.items where item.label == title {
+                return item
             }
         }
         return nil
@@ -126,7 +123,7 @@ extension SearchableComboListViewController: NSTextFieldDelegate {
             self, maximumHeightDidChange: desiredHeight)
     }
 
-    public override func viewWillAppear() {
+    override public func viewWillAppear() {
         let tag = tableViewController?.selectedTag
         view.window?.makeFirstResponder(searchField)
         tableViewController?.selectedTag = tag

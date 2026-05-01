@@ -118,7 +118,10 @@ extension iTermApplicationDelegate {
                 text: "Annotations are inline markup. When closed, they appear as a yellow underline; when open, they look like yellow stickies where you can write memos about content in the terminal window."),
             Tip(identifier: "Composer",
                 imageName: "ComposerMenuTip",
-                text: "The Composer is a window within the terminal where you can edit text using macOS-native controls. It does syntax highlighting, command and filename completion—even over SSH (provided you use SSH Integration). If AI features are enabled, you can also get AI-powered suggestions. You can even have multiple cursors! When you're ready, you can send the whole buffer or just a line at a time to your shell."),
+                text: "The Composer is a window within the terminal where you can edit text using macOS-native controls. " +
+                    "It does syntax highlighting, command and filename completion—even over SSH (provided you use SSH Integration). " +
+                    "If AI features are enabled, you can also get AI-powered suggestions. You can even have multiple cursors! " +
+                    "When you're ready, you can send the whole buffer or just a line at a time to your shell."),
             Tip(identifier: "Auto Composer",
                 imageName: "AutoComposerMenuTip",
                 text: "**Auto Composer** replaces your shell prompt with a macOS-native text field. It does syntax highlighting and command and filename completion. You can also enable AI-powered suggestions. Shell Integration is required."),
